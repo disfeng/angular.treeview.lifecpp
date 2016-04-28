@@ -1,0 +1,21 @@
+{
+  "name": "angular.treeview.lifecpp",
+  "homepage": "https://github.com/disfeng/angular.treeview.lifecpp",
+  "authors": [
+    "junyi.chen <disfeng1986@163.com>"
+  ],
+  "description": "junyi.chan",
+  "main": "./angular.treeview.js",
+  "keywords": [
+    "treeviwe.lifeccp"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
