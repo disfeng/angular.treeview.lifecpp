@@ -1,6 +1,6 @@
 /*
-	@license Angular Treeview version 0.1.6
-	ⓒ 2013 AHN JAE-HA http://github.com/eu81273/angular.treeview
+	@license Angular Treeview version 0.1.6-beta
+	ⓒ 2016 AHN JAE-HA https://github.com/disfeng/angular.treeview.lifecpp
 	License: MIT
 
 
@@ -30,8 +30,11 @@
 			restrict: 'A',
 			link: function ( scope, element, attrs ) {
 				//tree id
+                var open = false;
 				var treeId = attrs.treeId;
-			
+                if(treeId=='search'){
+                    open = true;
+                }
 				//tree model
 				var treeModel = attrs.treeModel;
 
@@ -47,22 +50,31 @@
 				//tree template
 				var template =
 					'<ul>' +
-						'<li data-ng-repeat="node in ' + treeModel + '">' +
-							'<i class="collapsed" data-ng-show="node.' + nodeChildren + '.length && node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
-							'<i class="expanded" data-ng-show="node.' + nodeChildren + '.length && !node.collapsed" data-ng-click="' + treeId + '.selectNodeHead(node)"></i>' +
-							'<i class="normal" data-ng-hide="node.' + nodeChildren + '.length"></i> ' +
+						'<li data-ng-repeat="node in ' + treeModel + '" ng-class=\"{true: \'pro\', false: \'pub\'}[node.permission]\">' +
+							'<i class="collapsed" data-ng-show="(node.isParent && !node.collapsed) && (!node.isMath && node.isParent)" data-ng-click="' + treeId + '.selectNodeLabel(node)"></i>' +
+							'<i class="expanded" data-ng-show="(node.isParent && node.collapsed) || (node.isMath && node.isParent)" data-ng-click="' + treeId + '.selectNodeLabel(node)"></i>' +
+							'<i class="normal" data-ng-hide="node.isParent"></i> ' +
 							'<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span>' +
-							'<div data-ng-hide="node.collapsed" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
+							'<div data-ng-show="node.collapsed || node.isMath" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
 						'</li>' +
 					'</ul>';
 
-
+        var template_search =
+            '<ul>' +
+                '<li data-ng-repeat="node in ' + treeModel + '">' +
+                    '<i class="collapsed" data-ng-show="node.' + nodeChildren + '.length && node.collapsed" data-ng-click="' + treeId + '.selectNodeLabel(node)"></i>' +
+                    '<i class="expanded" data-ng-show="node.' + nodeChildren + '.length && !node.collapsed" data-ng-click="' + treeId + '.selectNodeLabel(node)"></i>' +
+                    '<i class="normal" data-ng-hide="node.' + nodeChildren + '.length"></i> ' +
+                    '<span data-ng-class="node.selected" data-ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span>' +
+                    '<div data-ng-hide="node.collapsed" data-tree-id="' + treeId + '" data-tree-model="node.' + nodeChildren + '" data-node-id=' + nodeId + ' data-node-label=' + nodeLabel + ' data-node-children=' + nodeChildren + '></div>' +
+                '</li>' +
+            '</ul>';
 				//check tree id, tree model
 				if( treeId && treeModel ) {
 
 					//root node
 					if( attrs.angularTreeview ) {
-					
+
 						//create tree object if not exists
 						scope[treeId] = scope[treeId] || {};
 
@@ -72,15 +84,13 @@
 							//Collapse or Expand
 							selectedNode.collapsed = !selectedNode.collapsed;
 						};
-
 						//if node label clicks,
 						scope[treeId].selectNodeLabel = scope[treeId].selectNodeLabel || function( selectedNode ){
-
+                            selectedNode.collapsed = !selectedNode.collapsed;
 							//remove highlight from previous node
 							if( scope[treeId].currentNode && scope[treeId].currentNode.selected ) {
 								scope[treeId].currentNode.selected = undefined;
 							}
-
 							//set highlight to selected node
 							selectedNode.selected = 'selected';
 
@@ -88,9 +98,12 @@
 							scope[treeId].currentNode = selectedNode;
 						};
 					}
-
-					//Rendering template.
-					element.html('').append( $compile( template )( scope ) );
+          if(open){
+              element.html('').append( $compile( template_search )( scope ) );
+          }else{
+              //Rendering template.
+              element.html('').append( $compile( template )( scope ) );
+          }
 				}
 			}
 		};
