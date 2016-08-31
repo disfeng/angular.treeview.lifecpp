@@ -32,6 +32,7 @@
 				//tree id
                 var open = false;
 				var treeId = attrs.treeId;
+				console.log(treeId);
                 if(treeId=='search'){
                     open = true;
                 }
@@ -50,7 +51,7 @@
 				//tree template
 				var template =
 					'<ul>' +
-						'<li data-ng-repeat="node in ' + treeModel + '" ng-class=\"{true: \'pro\', false: \'pub\'}[node.permission]\">' +
+						'<li data-ng-repeat="node in ' + treeModel + '" data-role-id="{{node.id}}" ng-class=\"{true: \'pro\', false: \'pub\'}[node.permission]\">' +
 							'<i class="collapsed" data-ng-show="(node.isParent && !node.collapsed) && (!node.isMath && node.isParent)" data-ng-click="' + treeId + '.selectNodeLabel(node)"></i>' +
 							'<i class="expanded" data-ng-show="(node.isParent && node.collapsed) || (node.isMath && node.isParent)" data-ng-click="' + treeId + '.selectNodeLabel(node)"></i>' +
 							'<i class="normal" data-ng-hide="node.isParent"></i> ' +
