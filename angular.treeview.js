@@ -31,8 +31,7 @@
 			link: function ( scope, element, attrs ) {
 				//tree id
                 var open = false;
-				var treeId = attrs.treeId;
-				console.log(treeId);
+		var treeId = attrs.treeId;
                 if(treeId=='search'){
                     open = true;
                 }
